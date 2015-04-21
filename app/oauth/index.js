@@ -33,9 +33,22 @@
                 });
             });
         },
+        
+        getUserFromClient: function (clientId, clientSecret, done) {
+            Client.findOne({_id: clientId, secret: clientSecret}, function (err, client) {
+                if(err) return done(err);
+                if(!client) return done();
+
+                done(null, {
+                    id: client.id,
+                    isUser: false,
+                    isClient: true
+                });
+            });
+        },
 
         grantTypeAllowed: function (clientId, grantType, done) {
-            done(null, grantType === 'password' || grantType === 'refresh_token');
+            done(null, grantType === 'password' || grantType === 'refresh_token' || grantType === 'client_credentials');
         },
 
         saveAccessToken: function (accessToken, clientId, expires, user, done) {
@@ -64,7 +77,7 @@
         },
 
         saveRefreshToken: function (refreshToken, clientId, expires, user, done) {
-            redisClient.hmset('refresh_token:' + accessToken, {
+            redisClient.hmset('refresh_token:' + refreshToken, {
                 accessToken: refreshToken,
                 clientId: clientId,
                 expires: expires ? expires.toISOString() : null,
@@ -74,14 +87,14 @@
         },
 
         getRefreshToken: function (bearerToken, done) {
-            redisClient.hgetall('refresh_token:' + bearerToken, function (key, token) {
+            redisClient.hgetall('refresh_token:' + bearerToken, function (err, token) {
                 if(err) return done(err);
                 if(!token) return done();
 
                 done(null, {
                     refreshToken: token.accessToken,
                     clientId: token.clientId,
-                    expires: token.expires ? new Date(expires) : null,
+                    expires: token.expires ? new Date(token.expires) : null,
                     userId: token.userId
                 });
             });
