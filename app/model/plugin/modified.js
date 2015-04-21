@@ -1,4 +1,6 @@
 module.exports = function(schema, options) {
+    "use strict";
+    
     if (options == null) {
         options = {};
     }
@@ -9,9 +11,9 @@ module.exports = function(schema, options) {
             "default": Date.now
         }
     });
-    schema.index({
-        created: -1
-    });
+    
+    schema.index({ created: -1 });
+    
     if (options.index != null) {
         schema.index({
             modified: options.index
@@ -19,9 +21,10 @@ module.exports = function(schema, options) {
             sparse: true
         });
     }
-    return schema.pre('save', function(done) {
+    
+    schema.pre('save', function(done) {
         this.modified = Date.now();
-        return done();
+        done();
     });
 };
 
