@@ -1,0 +1,19 @@
+{
+  "name": "HerdCanon",
+  "version": "0.0.2",
+  "description": "Reboot of HerdCanon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scan/herdcanon-server.git"
+  },
+  "author": "Tom Streller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scan/herdcanon-server/issues"
+  },
+  "homepage": "https://github.com/scan/herdcanon-server"
+}
