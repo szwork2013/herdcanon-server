@@ -5,7 +5,7 @@
         User = model.User,
         Client = model.Client,
         redis = require('redis'),
-        redisClient = redis.createClient(process.env.REDIS_PORT);
+        redisClient = redis.createClient(process.env.REDIS_PORT || 6379);
 
     module.exports = {
         getAccessToken: function (bearerToken, done) {
