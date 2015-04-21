@@ -1,1 +1,2 @@
+require('sugar');
 require('./app');

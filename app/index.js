@@ -8,7 +8,7 @@
         expressValidator = require('express-validator'),
         http = require('http'),
         mongoose = require('mongoose'),
-        app = express();
+        app = global.app = express();
 
     app.set('port', process.env.PORT || 3000);
     app.use(bodyParser.urlencoded({
@@ -30,9 +30,10 @@
         res.send(200);
     });
 
-    app.use(app.oauth.errorHandler());
-
     require('./model');
+    require('./routes');
+
+    app.use(app.oauth.errorHandler());
 
     mongoose.connect(process.env.MONGOOSE_URL || 'mongodb://localhost/herdcanon', function (err) {
         if(err) {
