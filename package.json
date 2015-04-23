@@ -38,6 +38,7 @@
     "node-oauth2-server": "^2.4.0",
     "redback": "^0.4.0",
     "redis": "^0.12.1",
+    "scrypt": "^4.0.7",
     "sugar": "^1.4.1"
   },
   "optionalDependencies": {

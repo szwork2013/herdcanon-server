@@ -2,6 +2,7 @@ module.exports = (function () {
     var mongoose = require('mongoose'),
         bcrypt = require('bcrypt'),
         plugins = require('./plugin'),
+        BCRYPT_ROUNDS = 12,
         Schema = mongoose.Schema,
 
         UserSchema = new Schema({
@@ -70,7 +71,7 @@ module.exports = (function () {
     UserSchema.pre('save', function (done) {
         if(this.isModified('password')) {
             var self = this;
-            bcrypt.genSalt(10, function (err, salt) {
+            bcrypt.genSalt(BCRYPT_ROUNDS, function (err, salt) {
                 if(err) return done(err);
                 bcrypt.hash(self.password, salt, function (err, hash) {
                     self.password = hash;
