@@ -11,6 +11,8 @@
         app = global.app = express();
 
     app.set('port', process.env.PORT || 3000);
+    
+    app.disable('x-powered-by');
     app.use(bodyParser.urlencoded({
         extended: true
     }));
@@ -27,7 +29,7 @@
     app.all('/oauth/token', app.oauth.grant());
 
     app.get('/', app.oauth.authorise(), function (req, res) {
-        res.send(200);
+        res.status(200).send({success: true});
     });
 
     require('./model');
