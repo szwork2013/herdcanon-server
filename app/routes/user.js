@@ -72,16 +72,16 @@ module.exports = function(app) {
         req.checkBody('password', 'Invalid Password').notEmpty().isLength(6);
         req.checkBody('name', 'Invalid name').notEmpty().isLength(4);
 
+        req.sanitize('email').normalizeEmail();
+        req.sanitize('password').toString();
+        req.sanitize('name').escape().trim().toString();
+
         var errors = req.validationErrors();
         if (errors) {
             res.status(400).send(errors);
         }
         else {
-            var email = req.body.email,
-                password = req.body.password,
-                name = req.body.name;
-
-            User.register(email, password, name, function(err, user) {
+            User.register(req.body.email, req.body.password, req.body.name, function(err, user) {
                 if (err) {
                     if (err.code === 11000) {
                         res.status(400).send({

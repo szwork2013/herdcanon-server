@@ -40,7 +40,8 @@
     "redback": "^0.4.0",
     "redis": "^0.12.1",
     "scrypt": "^4.0.7",
-    "sugar": "^1.4.1"
+    "sugar": "^1.4.1",
+    "validator": "^3.39.0"
   },
   "optionalDependencies": {
     "hiredis": "^0.3.0"

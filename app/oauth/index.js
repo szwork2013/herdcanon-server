@@ -2,6 +2,7 @@
     "use strict";
 
     var model = require('../model'),
+        validator = require('validator'),
         User = model.User,
         Client = model.Client,
         redis = require('redis'),
@@ -60,7 +61,8 @@
             }, done);
         },
 
-        getUser: function (username, password, done) {
+        getUser: function (email, password, done) {
+            var username = validator.normalizeEmail(email);
             User.findByUsername(username, function (err, user) {
                 if(err) return done(err);
                 if(!user) return done();

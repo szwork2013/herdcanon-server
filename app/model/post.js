@@ -12,12 +12,12 @@ module.exports = (function() {
 
         voteMatch = function(user_id) {
             return function(v) {
-                return v.user_id === user_id;
+                return v._owner === _owner;
             };
         },
 
         CommentSchema = new mongoose.Schema({
-            user_id: {
+            _owner: {
                 type: ObjectId,
                 ref: 'User',
                 required: true
@@ -34,7 +34,7 @@ module.exports = (function() {
         }),
 
         VoteSchema = new mongoose.Schema({
-            user_id: {
+            _owner: {
                 type: ObjectId,
                 ref: 'User',
                 required: true
@@ -50,7 +50,7 @@ module.exports = (function() {
         }),
 
         PostSchema = new mongoose.Schema({
-            user_id: {
+            _owner: {
                 type: ObjectId,
                 ref: 'User',
                 required: true
@@ -89,9 +89,9 @@ module.exports = (function() {
             }
         });
 
-    PostSchema.index('user_id');
-    PostSchema.index('votes.user_id');
-    PostSchema.index('comments.user_id');
+    PostSchema.index('_owner');
+    PostSchema.index('votes._owner');
+    PostSchema.index('comments._owner');
     PostSchema.index('sum');
     PostSchema.index('average');
     PostSchema.index('up');
@@ -153,7 +153,7 @@ module.exports = (function() {
         this.votes.remove(voteMatch(user._id));
         if (value !== 0) {
             return this.votes.add({
-                user_id: user._id,
+                _owner: user._id,
                 val: value,
                 voted: Date.now()
             });
@@ -171,33 +171,6 @@ module.exports = (function() {
             return v.val > 0;
         });
     });
-
-    PostSchema.methods.populateUserData = function(done) {
-        if ((this.user_id != null) && (this.user == null)) {
-            return redis.hgetall("user:" + this.user_id, (function(_this) {
-                return function(err, user) {
-                    if (err) {
-                        return done(err);
-                    }
-                    else {
-                        _this.user = user;
-                        return done(null, _this);
-                    }
-                };
-            })(this));
-        }
-        else {
-            return done(null, this);
-        }
-    };
-
-    PostSchema.statics.populatePostsWithUserData = function(posts, done) {
-        var iterator;
-        iterator = function(post, done) {
-            return post.populateUserData(done);
-        };
-        return async.each(posts, iterator, done);
-    };
 
     return PostSchema;
 }());
